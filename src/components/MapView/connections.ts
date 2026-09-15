@@ -1,10 +1,11 @@
 import type * as maplibregl from 'maplibre-gl';
 import { POINTS } from '../../data/points';
+import { CAT } from '../../data/categories';
 
 export const VOIRON: [number, number] = [5.59, 45.36];
 
-const ACCENT    = '#2C6E9C';
-const ACCENT_HI = '#18567F';
+const ACCENT    = CAT.bureau.color;
+const ACCENT_HI = CAT.siege.color;
 
 const ARC_DURATION = 325;  // ms par arc
 const ARC_STAGGER  = 40;   // ms entre deux départs d'arc

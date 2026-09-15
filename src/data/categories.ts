@@ -1,11 +1,11 @@
 import type { CatMap } from '../types';
 
 export const CAT: CatMap = {
-  siege:      { label: 'Siège – Manufacture', color: '#18567F' },
-  bureau:     { label: 'Bureau permanent',    color: '#2C6E9C' },
-  envoye:     { label: 'Envoyé spécial',      color: '#5E8CAA' },
-  client:     { label: 'Client',              color: '#9DAAB3' },
-  fournisseur:{ label: 'Fournisseur',         color: '#3A4A55' },
+  siege:      { label: 'Siège – Manufacture', color: '#262626' },
+  bureau:     { label: 'Bureau permanent',    color: '#404040' },
+  envoye:     { label: 'Envoyé spécial',      color: '#525252' },
+  client:     { label: 'Client',              color: '#737373' },
+  fournisseur:{ label: 'Fournisseur',         color: '#A1A1A1' },
 };
 
 export const RELIEF_SRC: [number, number, number, number][] = [

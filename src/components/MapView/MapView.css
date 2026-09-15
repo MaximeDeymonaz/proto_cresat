@@ -16,7 +16,7 @@
   to   { opacity: 1; }
 }
 
-/* ── Atmosphère (fond relief) : nuages, voile froid, vignettage ── */
+/* ── Atmosphère (fond relief) : voile uniforme, vignettage ── */
 .map-atmosphere {
   position: absolute;
   inset: 0;
@@ -25,68 +25,20 @@
   z-index: 5;
 }
 
-.atmo-cloud {
-  position: absolute;
-  inset: 0;
-  background-repeat: repeat;
-}
-
-/* Les textures (bruit toroïdal, donc raccordables à l'infini) sont générées
-   sur canvas au chargement — voir cloudTexture.ts — et injectées en style
-   inline. Le défilement boucle sur des multiples exacts de la tuile. */
-.atmo-cloud--a {
-  background-size: 2048px 2048px;
-  opacity: 0.15;
-  animation: cloudScrollA 330s linear infinite;
-}
-
-.atmo-cloud--b {
-  background-size: 1024px 1024px;
-  opacity: 0.11;
-  animation: cloudScrollB 180s linear infinite;
-}
-
-.atmo-cloud--c {
-  background-size: 3072px 3072px;
-  opacity: 0.16;
-  animation: cloudScrollC 210s linear infinite;
-}
-
-/* Déplacements = multiples entiers de background-size → boucle sans couture */
-@keyframes cloudScrollA {
-  from { background-position: 0 0; }
-  to   { background-position: 4096px 2048px; }
-}
-
-@keyframes cloudScrollB {
-  from { background-position: 0 0; }
-  to   { background-position: -2048px 1024px; }
-}
-
-@keyframes cloudScrollC {
-  from { background-position: 0 0; }
-  to   { background-position: 3072px 0; }
-}
-
-/* Voile froid uniforme */
+/* Voile uniforme */
 .atmo-tint {
   position: absolute;
   inset: 0;
-  background: rgba(96, 122, 143, 0.07);
+  background: rgba(120, 120, 120, 0.07);
 }
 
-/* Vignettage sombre + lumière froide venant du haut */
+/* Vignettage sombre + lumière venant du haut */
 .atmo-vignette {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 50% 42%, transparent 46%, rgba(10, 18, 25, 0.52) 100%),
-    linear-gradient(to bottom, rgba(140, 165, 182, 0.10), transparent 24%);
-}
-
-/* Le mouvement des nuages est coupé si l'utilisateur préfère éviter les animations */
-@media (prefers-reduced-motion: reduce) {
-  .atmo-cloud { animation: none; }
+    radial-gradient(ellipse at 50% 42%, transparent 46%, rgba(12, 12, 12, 0.52) 100%),
+    linear-gradient(to bottom, rgba(160, 160, 160, 0.10), transparent 24%);
 }
 
 .map-maplibre .maplibregl-ctrl-bottom-right {
@@ -165,8 +117,8 @@
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #1F2A36;
-  -webkit-text-stroke: 3px rgba(235, 241, 248, 0.95);
+  color: #262626;
+  -webkit-text-stroke: 3px rgba(240, 240, 240, 0.95);
   paint-order: stroke;
   pointer-events: none;
 }
@@ -175,16 +127,16 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.07em;
-  color: #1E2C38;
+  color: #171717;
   left: calc(50% + 17px);
 }
 
 /* Fond sombre */
 .theme-dark .mk-label {
-  color: #c7d2da;
-  -webkit-text-stroke: 3px rgba(18, 22, 26, 0.92);
+  color: #D4D4D4;
+  -webkit-text-stroke: 3px rgba(20, 20, 20, 0.92);
 }
 
 .theme-dark .mk-icon.is-hq .mk-label {
-  color: #9ec7e2;
+  color: #F5F5F5;
 }
