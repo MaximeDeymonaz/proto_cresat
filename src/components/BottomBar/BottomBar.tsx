@@ -1,74 +1,43 @@
-import { useState } from 'react';
-import { CAT } from '../../data/categories';
-import type { PointCategory } from '../../types';
-import { MarkerShape } from '../MapView/MarkerShape';
-import './BottomBar.css';
+import { LayoutGridIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+import { LegendContent } from '@/components/Legend/LegendContent';
 
-const ORDER: PointCategory[] = ['siege', 'bureau', 'envoye', 'client', 'fournisseur'];
-
-function LegendIcon({ cat }: { cat: PointCategory }) {
-  const color = CAT[cat].color;
-  const size = 7;
-  const svgBox = size * 3;
-  return (
-    <span className="bb-icon-wrap">
-      <svg
-        width={svgBox} height={svgBox}
-        viewBox={`${-svgBox / 2} ${-svgBox / 2} ${svgBox} ${svgBox}`}
-        overflow="visible"
-      >
-        <MarkerShape cat={cat} size={size} color={color} strokeColor="#fff" strokeWidth={1.4} />
-      </svg>
-    </span>
-  );
-}
-
+// Barre inférieure, visible uniquement sur mobile.
 export function BottomBar() {
-  const [open, setOpen] = useState(false);
-
   return (
-    <>
-      {open && (
-        <div className="bb-legend-overlay" onClick={() => setOpen(false)}>
-          <div className="bb-legend-sheet" onClick={e => e.stopPropagation()}>
-            <div className="bb-legend-handle" />
-            <div className="bb-legend-title">Légende</div>
-            <div className="bb-legend-items">
-              {ORDER.map(cat => (
-                <div key={cat} className="bb-legend-row">
-                  <LegendIcon cat={cat} />
-                  <span className="bb-legend-label">
-                    {CAT[cat].label}
-                    <span className="bb-legend-count">
-                      {cat === 'siege' ? 1 : cat === 'bureau' ? 5 : cat === 'envoye' ? 5 : cat === 'client' ? 8 : 5}
-                    </span>
-                  </span>
-                </div>
-              ))}
-              <div className="bb-legend-route">
-                <span className="bb-legend-route-line" />
-                <span className="bb-legend-route-label">Liaisons commerciales depuis Voiron</span>
-              </div>
-            </div>
+    <div
+      className={
+        'absolute inset-x-0 bottom-0 z-25 flex h-[calc(3.5rem+env(safe-area-inset-bottom))] items-center justify-center ' +
+        'border-t bg-background/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-md min-[481px]:hidden'
+      }
+    >
+      <Drawer>
+        <DrawerTrigger asChild>
+          <Button variant="ghost" className="h-auto flex-col gap-1 px-5 py-1.5 text-xs">
+            <LayoutGridIcon className="size-5" />
+            Légende
+          </Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Légende</DrawerTitle>
+            <DrawerDescription className="sr-only">
+              Catégories de points et liaisons commerciales
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
+            <LegendContent />
           </div>
-        </div>
-      )}
-
-      <div className="bottom-bar">
-        <button
-          className={`bb-btn ${open ? 'bb-btn--active' : ''}`}
-          onClick={() => setOpen(v => !v)}
-          aria-label="Légende"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="7" height="7" rx="1"/>
-            <rect x="14" y="3" width="7" height="7" rx="1"/>
-            <rect x="3" y="14" width="7" height="7" rx="1"/>
-            <rect x="14" y="14" width="7" height="7" rx="1"/>
-          </svg>
-          <span>Légende</span>
-        </button>
-      </div>
-    </>
+        </DrawerContent>
+      </Drawer>
+    </div>
   );
 }

@@ -11,9 +11,9 @@ import { FichePanel } from './components/FichePanel/FichePanel';
 import { ZoomControls } from './components/ZoomControls/ZoomControls';
 import { LoadingScreen } from './components/LoadingScreen/LoadingScreen';
 import { BottomBar } from './components/BottomBar/BottomBar';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { POINTS } from './data/points';
 import type { Point } from './types';
-import './App.css';
 
 const VOIRON: [number, number] = [5.59, 45.36]; // [lng, lat] MapLibre
 const INITIAL_ZOOM = 6.5;
@@ -87,33 +87,35 @@ export function App() {
   }, [loadPhase]);
 
   return (
-    <div id="app-root">
-      <div className="map-container">
-        <MapView
-          selectedId={selectedId}
-          basemap={basemap}
-          pitch={pitchFor(view)}
-          onSelect={handleSelect}
-          onMapReady={handleMapReady}
-          onFirstIdle={handleFirstIdle}
-        />
+    <TooltipProvider>
+      <div className="fixed inset-0 touch-manipulation overflow-hidden bg-background select-none">
+        <div className="absolute inset-0">
+          <MapView
+            selectedId={selectedId}
+            basemap={basemap}
+            pitch={pitchFor(view)}
+            onSelect={handleSelect}
+            onMapReady={handleMapReady}
+            onFirstIdle={handleFirstIdle}
+          />
+        </div>
+
+        <TitleCard />
+        <Legend />
+        <BasemapToggle value={basemap} onChange={setBasemap} view={view} onViewChange={setView} />
+
+        <ZoomControls onReset={resetView} />
+
+        {hintVisible && <TactileHint leaving={hintLeaving} />}
+
+        {selectedPoint && (
+          <FichePanel point={selectedPoint} leaving={panelLeaving} onClose={() => handleSelect(null)} />
+        )}
+
+        <BottomBar />
+
+        {loadPhase !== 'done' && <LoadingScreen leaving={loadPhase === 'leaving'} />}
       </div>
-
-      <TitleCard />
-      <Legend />
-      <BasemapToggle value={basemap} onChange={setBasemap} view={view} onViewChange={setView} />
-
-      <ZoomControls onReset={resetView} />
-
-      {hintVisible && <TactileHint leaving={hintLeaving} />}
-
-      {selectedPoint && (
-        <FichePanel point={selectedPoint} leaving={panelLeaving} onClose={() => handleSelect(null)} />
-      )}
-
-      <BottomBar />
-
-      {loadPhase !== 'done' && <LoadingScreen leaving={loadPhase === 'leaving'} />}
-    </div>
+    </TooltipProvider>
   );
 }

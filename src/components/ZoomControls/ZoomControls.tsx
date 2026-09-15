@@ -1,4 +1,6 @@
-import './ZoomControls.css';
+import { RotateCcwIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ZoomControlsProps {
   onReset: () => void;
@@ -6,13 +8,21 @@ interface ZoomControlsProps {
 
 export function ZoomControls({ onReset }: ZoomControlsProps) {
   return (
-    <div className="zoom-controls">
-      <button className="zoom-btn zoom-btn--reset" onClick={onReset} aria-label="Réinitialiser la vue">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-          <path d="M3 3v5h5"/>
-        </svg>
-      </button>
+    <div className="absolute right-6 bottom-6 z-20 max-md:right-4 max-md:bottom-4 max-[480px]:hidden">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon-lg"
+            onClick={onReset}
+            aria-label="Réinitialiser la vue"
+            className="bg-background/80 shadow-lg backdrop-blur-md"
+          >
+            <RotateCcwIcon />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="left">Réinitialiser la vue</TooltipContent>
+      </Tooltip>
     </div>
   );
 }

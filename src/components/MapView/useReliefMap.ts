@@ -168,7 +168,12 @@ export function useReliefMap({
   }, []);
 
   // ── Changement de fond de carte ──
+  // On ignore le style déjà appliqué : un setStyle pendant le chargement initial
+  // force MapLibre à tout reconstruire et retarde l'événement 'load'.
+  const appliedBasemapRef = useRef(basemap);
   useEffect(() => {
+    if (appliedBasemapRef.current === basemap) return;
+    appliedBasemapRef.current = basemap;
     mapRef.current?.setStyle(STYLES[basemap]);
   }, [basemap]);
 
