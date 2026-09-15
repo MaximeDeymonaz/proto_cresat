@@ -1,0 +1,156 @@
+/* ── Wrapper positionné ── */
+.legend-wrap {
+  position: absolute;
+  bottom: 26px;
+  left: 28px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+/* ── Bouton toggle ── */
+.legend-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--parch-90);
+  backdrop-filter: var(--panel-blur);
+  -webkit-backdrop-filter: var(--panel-blur);
+  border: 1px solid var(--ink-18);
+  border-radius: var(--radius);
+  box-shadow: var(--panel-shadow);
+  cursor: pointer;
+  color: var(--ink-55);
+  transition: background 0.25s var(--spring), color 0.25s,
+              transform 0.25s var(--spring), box-shadow 0.25s, border-color 0.25s;
+}
+
+.legend-toggle span {
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-variant: small-caps;
+  letter-spacing: 0.1em;
+}
+
+.legend-toggle:hover {
+  color: var(--ink);
+  background: var(--ink-10);
+}
+.legend-toggle:active { transform: translateY(0) scale(0.98); }
+.legend-toggle.is-active {
+  color: var(--ink);
+  background: var(--accent-soft);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: var(--panel-shadow), var(--accent-glow);
+}
+
+/* ── Panneau légende (apparaît au clic) ── */
+.legend {
+  padding: 18px 22px 17px;
+  background: var(--parch-90);
+  backdrop-filter: var(--panel-blur);
+  -webkit-backdrop-filter: var(--panel-blur);
+  border: 1px solid var(--ink-18);
+  border-radius: var(--radius);
+  box-shadow: var(--panel-shadow);
+  min-width: 242px;
+  animation: riseIn 0.4s var(--spring) both;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Cadre décoratif intérieur */
+.legend::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--ink-10);
+  pointer-events: none;
+  border-radius: 1px;
+}
+
+.legend__title {
+  font-family: var(--f-body);
+  font-size: 12px;
+  font-variant: small-caps;
+  letter-spacing: 0.18em;
+  color: var(--ink-55);
+  margin-bottom: 13px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--ink-18);
+}
+
+.legend__items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.legend-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+}
+
+.legend__label {
+  font-family: var(--f-body);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.legend__count {
+  color: var(--ink-35);
+  margin-left: 4px;
+  font-size: 13px;
+}
+
+.legend__route {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--ink-18);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend__route-line {
+  width: 22px;
+  height: 1.5px;
+  background: var(--accent);
+  flex: none;
+}
+
+.legend__route-label {
+  font-family: var(--f-body);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-55);
+  white-space: nowrap;
+}
+
+/* ── Tablette ── */
+@media (max-width: 768px) {
+  .legend-wrap   { bottom: 16px; left: 16px; }
+  .legend        { padding: 14px 18px 13px; min-width: 210px; }
+  .legend__label { font-size: 14px; }
+  .legend__route-label { font-size: 13px; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .legend-wrap   { display: none; }
+}

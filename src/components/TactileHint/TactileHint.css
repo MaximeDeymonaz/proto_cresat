@@ -1,0 +1,55 @@
+.tactile-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: fit-content;
+  max-width: 80%;
+  bottom: 32px;
+  z-index: 20;
+  gap: 11px;
+  padding: 11px 22px;
+  background: var(--parch-90);
+  backdrop-filter: var(--panel-blur);
+  -webkit-backdrop-filter: var(--panel-blur);
+  border: 1px solid var(--ink-18);
+  border-radius: var(--radius);
+  box-shadow: var(--panel-shadow);
+  white-space: nowrap;
+}
+
+/* Disparition déclenchée par la première interaction de l'utilisateur */
+.tactile-hint.is-leaving {
+  animation: hintFadeOut 3s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes hintFadeOut {
+  0%   { opacity: 1;   transform: translateY(0);   }
+  70%  { opacity: 0;   transform: translateY(6px); }
+  100% { opacity: 0;   transform: translateY(8px); }
+}
+
+.tactile-hint__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+  flex: none;
+}
+
+.tactile-hint__text {
+  font-family: var(--f-body);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-55);
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .tactile-hint { display: none; }
+}

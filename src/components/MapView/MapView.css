@@ -1,0 +1,185 @@
+.map-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.map-maplibre {
+  width: 100%;
+  height: 100%;
+  background: var(--base);
+  animation: fadeIn 0.9s ease both;
+}
+
+/* ── Atmosphère (fond relief) : nuages, voile froid, vignettage ── */
+.map-atmosphere {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.atmo-cloud {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+}
+
+/* Les textures (bruit toroïdal, donc raccordables à l'infini) sont générées
+   sur canvas au chargement — voir cloudTexture.ts — et injectées en style
+   inline. Le défilement boucle sur des multiples exacts de la tuile. */
+.atmo-cloud--a {
+  background-size: 2048px 2048px;
+  opacity: 0.15;
+  animation: cloudScrollA 330s linear infinite;
+}
+
+.atmo-cloud--b {
+  background-size: 1024px 1024px;
+  opacity: 0.11;
+  animation: cloudScrollB 180s linear infinite;
+}
+
+.atmo-cloud--c {
+  background-size: 3072px 3072px;
+  opacity: 0.16;
+  animation: cloudScrollC 210s linear infinite;
+}
+
+/* Déplacements = multiples entiers de background-size → boucle sans couture */
+@keyframes cloudScrollA {
+  from { background-position: 0 0; }
+  to   { background-position: 4096px 2048px; }
+}
+
+@keyframes cloudScrollB {
+  from { background-position: 0 0; }
+  to   { background-position: -2048px 1024px; }
+}
+
+@keyframes cloudScrollC {
+  from { background-position: 0 0; }
+  to   { background-position: 3072px 0; }
+}
+
+/* Voile froid uniforme */
+.atmo-tint {
+  position: absolute;
+  inset: 0;
+  background: rgba(96, 122, 143, 0.07);
+}
+
+/* Vignettage sombre + lumière froide venant du haut */
+.atmo-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 42%, transparent 46%, rgba(10, 18, 25, 0.52) 100%),
+    linear-gradient(to bottom, rgba(140, 165, 182, 0.10), transparent 24%);
+}
+
+/* Le mouvement des nuages est coupé si l'utilisateur préfère éviter les animations */
+@media (prefers-reduced-motion: reduce) {
+  .atmo-cloud { animation: none; }
+}
+
+.map-maplibre .maplibregl-ctrl-bottom-right {
+  display: none;
+}
+
+.map-maplibre.theme-dark {
+  background: #14181c;
+}
+
+/* ── Marqueurs ── */
+.mk-icon {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  overflow: visible;
+  transition: opacity 0.25s ease;
+}
+
+.mk-icon.mk-anim-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mk-svg {
+  overflow: visible;
+  transition: transform 0.18s ease;
+  filter: drop-shadow(0 2px 3px rgba(15, 35, 55, 0.28));
+}
+
+.mk-icon:hover .mk-svg {
+  transform: scale(1.18);
+}
+
+/* Halo de sélection */
+.mk-icon.is-selected::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 34px; height: 34px;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  opacity: 0.70;
+  pointer-events: none;
+}
+
+/* Pulsation du siège */
+.mk-icon.is-hq::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 30px; height: 30px;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  animation: mk-pulse 3.6s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes mk-pulse {
+  0%   { transform: translate(-50%, -50%) scale(0.7); opacity: 0.8; }
+  70%  { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+}
+
+/* Étiquette */
+.mk-label {
+  position: absolute;
+  left: calc(50% + 13px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: var(--f-body);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1F2A36;
+  -webkit-text-stroke: 3px rgba(235, 241, 248, 0.95);
+  paint-order: stroke;
+  pointer-events: none;
+}
+
+.mk-icon.is-hq .mk-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: #1E2C38;
+  left: calc(50% + 17px);
+}
+
+/* Fond sombre */
+.theme-dark .mk-label {
+  color: #c7d2da;
+  -webkit-text-stroke: 3px rgba(18, 22, 26, 0.92);
+}
+
+.theme-dark .mk-icon.is-hq .mk-label {
+  color: #9ec7e2;
+}

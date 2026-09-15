@@ -1,0 +1,120 @@
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: dark;
+
+  /* ── Texte (clair, sur verre fumé) ── */
+  --ink:       #EEF2FB;
+  --ink-80:    rgba(238, 242, 251, 0.80);
+  --ink-55:    rgba(238, 242, 251, 0.62);
+  --ink-35:    rgba(238, 242, 251, 0.42);
+  --ink-18:    rgba(255, 255, 255, 0.14);
+  --ink-10:    rgba(255, 255, 255, 0.07);
+
+  /* ── Base de l'interface : rgb(15, 25, 44), déclinée en surfaces ── */
+  --base:        rgb(15, 25, 44);
+  --base-raise:  rgb(37, 51, 78);   /* base éclaircie : surface imbriquée */
+  --base-deep:   rgb(9, 15, 26);    /* base assombrie : fonds, vignettage */
+
+  /* ── Surfaces : verre fumé translucide, dérivées de --base ── */
+  --parch:       rgba(15, 25, 44, 0.88); /* panneaux pleins */
+  --parch-mid:   rgba(37, 51, 78, 0.55); /* carte imbriquée */
+  --parch-90:    rgba(15, 25, 44, 0.55); /* panneaux flottants */
+  --parch-96:    rgba(15, 25, 44, 0.86); /* barre mobile */
+  --parch-glass: rgba(15, 25, 44, 0.76); /* fiche / sheets */
+
+  /* ── Accent bleu vif ── */
+  --accent:      #38BDF8;
+  --accent-2:    #818CF8;
+  --accent-3:    #22D3EE;
+  --accent-soft: rgba(56, 189, 248, 0.16);
+  --accent-line: linear-gradient(120deg, #22D3EE 0%, #38BDF8 45%, #818CF8 100%);
+  --accent-glow: 0 0 22px -4px rgba(56, 189, 248, 0.55);
+
+  /* ── Effets de panneau réutilisables ── */
+  --panel-blur: blur(15px); /* interface entière (hors fiche panel) */
+  --panel-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 28px 60px -22px rgba(0, 0, 0, 0.78);
+
+  /* ── Rayon d'origine, discret ── */
+  --radius: 2px;
+
+  --f-display: 'Libre Caslon Text', Georgia, serif;
+  --f-body:    'Literata', Georgia, serif;
+
+  --spring: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: var(--base);
+}
+
+body {
+  font-family: var(--f-body);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ════════════════════════════════════════
+   Keyframes globales
+   (uniquement en réponse à une action ou
+   à un changement d'état de l'application)
+   ════════════════════════════════════════ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes drawln {
+  from { stroke-dashoffset: 1; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes markerIn {
+  from { opacity: 0; transform: scale(0.55); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes vpulse {
+  0%   { transform: scale(1);   opacity: 0.47; }
+  50%  {                        opacity: 0; }
+  100% { transform: scale(2.3); opacity: 0; }
+}
+
+/* Entrée latérale (ouverture d'un volet) */
+@keyframes slideIn {
+  from { transform: translateX(40px); opacity: 0; filter: blur(6px); }
+  to   { transform: translateX(0);    opacity: 1; filter: blur(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Montée avec ressort (ouverture d'un panneau) */
+@keyframes riseIn {
+  0%   { transform: translateY(14px) scale(0.97); opacity: 0; filter: blur(6px); }
+  60%  { filter: blur(0); }
+  100% { transform: translateY(0) scale(1);        opacity: 1; filter: blur(0); }
+}
+
+@keyframes drawerUp {
+  from { transform: translateY(100%); opacity: 0.6; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Accessibilité : on calme les animations si demandé */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
