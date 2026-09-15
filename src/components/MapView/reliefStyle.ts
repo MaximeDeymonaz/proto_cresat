@@ -12,9 +12,9 @@ export const TERRAIN_EXAGGERATION = 4;
 const RELIEF_STYLE: StyleSpecification = {
   version: 8,
   sky: {
-    'sky-color':          '#7d95a6',
-    'horizon-color':      '#c6d0d4',
-    'fog-color':          '#bfc9cd',
+    'sky-color':          '#929292',
+    'horizon-color':      '#cdcdcd',
+    'fog-color':          '#c6c6c6',
     'sky-horizon-blend':  0.75,
     'horizon-fog-blend':  0.65,
     'fog-ground-blend':   0.7,
@@ -44,26 +44,26 @@ const RELIEF_STYLE: StyleSpecification = {
     {
       id:    'fond',
       type:  'background',
-      paint: { 'background-color': '#283c38' },
+      paint: { 'background-color': '#323232' },
     },
     {
       id:     'relief-couleurs',
       type:   'color-relief',
       source: 'dem-relief',
       paint: {
-        // Palette froide et désaturée, ligne des neiges abaissée
+        // Rampe hypsométrique en niveaux de gris, du plus sombre (creux) au blanc (sommets)
         'color-relief-color': [
           'interpolate', ['linear'], ['elevation'],
-          -50,  '#1f302e',
-          150,  '#283c38',
-          400,  '#334a43',
-          700,  '#41564c',
-          1000, '#546457',
-          1400, '#6d7a6e',
-          1700, '#8b9089',
-          2000, '#adb2af',
-          2300, '#d0d9db',
-          2700, '#ecf2f5',
+          -50,  '#282828',
+          150,  '#323232',
+          400,  '#3f3f3f',
+          700,  '#4c4c4c',
+          1000, '#5c5c5c',
+          1400, '#747474',
+          1700, '#8c8c8c',
+          2000, '#b0b0b0',
+          2300, '#d5d5d5',
+          2700, '#f0f0f0',
           3300, '#ffffff',
         ],
       },
@@ -74,9 +74,9 @@ const RELIEF_STYLE: StyleSpecification = {
       source: 'dem-relief',
       paint: {
         'hillshade-exaggeration':    0.72,
-        'hillshade-shadow-color':    '#141f27',
-        'hillshade-highlight-color': '#e9f2f7',
-        'hillshade-accent-color':    '#1f2d33',
+        'hillshade-shadow-color':    '#1e1e1e',
+        'hillshade-highlight-color': '#f0f0f0',
+        'hillshade-accent-color':    '#292929',
       },
     },
     {
@@ -86,7 +86,8 @@ const RELIEF_STYLE: StyleSpecification = {
       'source-layer': 'water',
       paint: {
         // Opaque : masque la bathymétrie du DEM (bandes de tuiles visibles sinon)
-        'fill-color':   '#2c4654',
+        // Volontairement plus sombre que le relief pour rester lisible en niveaux de gris
+        'fill-color':   '#181818',
         'fill-opacity': 1,
       },
     },
@@ -96,7 +97,7 @@ const RELIEF_STYLE: StyleSpecification = {
       source:       'carto-vector',
       'source-layer': 'waterway',
       paint: {
-        'line-color':   '#2c4654',
+        'line-color':   '#181818',
         'line-opacity': 0.85,
         'line-width':   ['interpolate', ['linear'], ['zoom'], 6, 0.4, 12, 1.8],
       },

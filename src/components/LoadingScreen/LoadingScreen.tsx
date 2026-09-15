@@ -4,10 +4,10 @@ import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
 const TIPS = [
-  'Inclinez la carte à 45° pour révéler le relief des Alpes.',
+  'Inclinez la carte à 45° pour révéler le relief des Vosges.',
   'La vue de haut offre une lecture claire des distances.',
-  'Sélectionnez un comptoir pour consulter sa fiche.',
-  'La molette permet de survoler vallées et massifs.',
+  'Sélectionnez une localité pour consulter sa fiche.',
+  'La taille des cercles est proportionnelle au nombre de confréries.',
 ];
 
 interface LoadingScreenProps {
@@ -37,10 +37,10 @@ export function LoadingScreen({ leaving }: LoadingScreenProps) {
       <div className="relative flex flex-col items-center gap-4 px-6 text-center">
         <Badge variant="outline">Prototype</Badge>
         <h1 className="flex flex-col items-center gap-2">
-          <span className="text-4xl font-semibold tracking-tight sm:text-5xl">Réseau commercial</span>
-          <span className="text-lg text-muted-foreground sm:text-2xl">Jacques Denantes et son fils</span>
+          <span className="text-4xl font-semibold tracking-tight sm:text-5xl">Confréries alsaciennes</span>
+          <span className="text-lg text-muted-foreground sm:text-2xl">Attestées au XVIIIe siècle</span>
         </h1>
-        <p className="text-sm text-muted-foreground tabular-nums">1772–1778</p>
+        <p className="text-sm text-muted-foreground tabular-nums">Carte 7 · O. Kammerer, 2011</p>
       </div>
 
       <div className="absolute inset-x-0 bottom-[calc(2.5rem+env(safe-area-inset-bottom))] flex flex-col items-center gap-3 px-8">

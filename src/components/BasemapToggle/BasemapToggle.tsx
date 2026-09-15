@@ -21,7 +21,7 @@ interface BasemapToggleProps {
 }
 
 const BASEMAPS: { value: Basemap; label: string; swatch: string }[] = [
-  { value: 'relief',   label: 'Relief 3D', swatch: 'bg-[linear-gradient(135deg,#38504a_0%,#91938b_55%,#e9f0f3_100%)]' },
+  { value: 'relief',   label: 'Relief 3D', swatch: 'bg-[linear-gradient(135deg,#444444_0%,#8f8f8f_55%,#eeeeee_100%)]' },
   { value: 'positron', label: 'Clair',     swatch: 'bg-[#f0ece2]' },
   { value: 'dark',     label: 'Sombre',    swatch: 'bg-[#26282c]' },
 ];

@@ -1,0 +1,33 @@
+{
+  "source": {
+    "titre": "Carte 7 : Confréries alsaciennes attestées au XVIIIe siècle",
+    "auteur": "O. Kammerer, 2011",
+    "donnees": "Louis Schlaefli",
+    "infographie": "AHA, J. P. Droux"
+  },
+  "notes": {
+    "perimetre": "Seules les localités nommées sur la carte (au moins 3 confréries) sont géocodées.",
+    "coordonnees": "WGS84 (EPSG:4326), centre approximatif de la commune ou de la localité.",
+    "confreries_estimees": "Estimation visuelle d'après la taille des cercles (légende : 1, 3, 5, 8, 10, 27). Seule la valeur de Strasbourg est certaine."
+  },
+  "localites": [
+    { "nom": "Wissembourg", "nom_actuel": "Wissembourg", "departement": "Bas-Rhin", "lat": 49.0370, "lon": 7.9450, "confreries_estimees": 4 },
+    { "nom": "Sarre-Union", "nom_actuel": "Sarre-Union", "departement": "Bas-Rhin", "lat": 48.9392, "lon": 7.0906, "confreries_estimees": 4 },
+    { "nom": "Haguenau", "nom_actuel": "Haguenau", "departement": "Bas-Rhin", "lat": 48.8156, "lon": 7.7906, "confreries_estimees": 5 },
+    { "nom": "Strasbourg", "nom_actuel": "Strasbourg", "departement": "Bas-Rhin", "lat": 48.5734, "lon": 7.7521, "confreries_estimees": 27 },
+    { "nom": "Obernai", "nom_actuel": "Obernai", "departement": "Bas-Rhin", "lat": 48.4622, "lon": 7.4819, "confreries_estimees": 6 },
+    { "nom": "Ehl", "nom_actuel": "Ehl (localité de Benfeld)", "departement": "Bas-Rhin", "lat": 48.3780, "lon": 7.6170, "confreries_estimees": 4, "remarque": "Localité rattachée à Benfeld, coordonnées moins précises" },
+    { "nom": "Rombach-le-Franc", "nom_actuel": "Rombach-le-Franc", "departement": "Haut-Rhin", "lat": 48.2833, "lon": 7.2600, "confreries_estimees": 5 },
+    { "nom": "Sainte-Marie-aux-Mines", "nom_actuel": "Sainte-Marie-aux-Mines", "departement": "Haut-Rhin", "lat": 48.2467, "lon": 7.1833, "confreries_estimees": 4 },
+    { "nom": "Sélestat", "nom_actuel": "Sélestat", "departement": "Bas-Rhin", "lat": 48.2594, "lon": 7.4542, "confreries_estimees": 8 },
+    { "nom": "Lapoutroie", "nom_actuel": "Lapoutroie", "departement": "Haut-Rhin", "lat": 48.1544, "lon": 7.1683, "confreries_estimees": 5 },
+    { "nom": "Kaysersberg", "nom_actuel": "Kaysersberg-Vignoble", "departement": "Haut-Rhin", "lat": 48.1394, "lon": 7.2636, "confreries_estimees": 5 },
+    { "nom": "Colmar", "nom_actuel": "Colmar", "departement": "Haut-Rhin", "lat": 48.0794, "lon": 7.3585, "confreries_estimees": 10 },
+    { "nom": "Neuf-Brisach", "nom_actuel": "Neuf-Brisach", "departement": "Haut-Rhin", "lat": 48.0178, "lon": 7.5283, "confreries_estimees": 8 },
+    { "nom": "Guebwiller", "nom_actuel": "Guebwiller", "departement": "Haut-Rhin", "lat": 47.9087, "lon": 7.2104, "confreries_estimees": 4 },
+    { "nom": "Mollau", "nom_actuel": "Mollau", "departement": "Haut-Rhin", "lat": 47.8736, "lon": 7.0253, "confreries_estimees": 4 },
+    { "nom": "Ensisheim", "nom_actuel": "Ensisheim", "departement": "Haut-Rhin", "lat": 47.8656, "lon": 7.3525, "confreries_estimees": 8 },
+    { "nom": "Thann", "nom_actuel": "Thann", "departement": "Haut-Rhin", "lat": 47.8078, "lon": 7.1033, "confreries_estimees": 5 },
+    { "nom": "Landser", "nom_actuel": "Landser", "departement": "Haut-Rhin", "lat": 47.6861, "lon": 7.3869, "confreries_estimees": 5 }
+  ]
+}

@@ -13,10 +13,10 @@ export function TitleCard() {
           la largeur intrinsèque et écrase la carte, positionnée en absolu. */}
       <div className="flex flex-col gap-1 px-5 max-[480px]:px-4">
         <CardTitle className="text-lg font-semibold tracking-tight max-md:text-base max-[480px]:text-sm">
-          Réseau commercial — Jacques Denantes et son fils
+          Confréries alsaciennes attestées au XVIIIe siècle
         </CardTitle>
         <CardDescription className="max-[480px]:text-xs">
-          Carte établie d'après le Registre des ventes · 1772–1778
+          Carte 7 · O. Kammerer, 2011 · données L. Schlaefli
         </CardDescription>
       </div>
     </Card>

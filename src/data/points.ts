@@ -1,32 +1,42 @@
 import type { Point } from '../types';
+import source from './confreries_alsace_XVIIIe.json';
 
-export const POINTS: Point[] = [
-  { id: 'voiron', ville: 'Voiron', pays: 'Isère, France', cat: 'siege', lat: 45.36, lon: 5.59, date: 'Depuis 1680', type: 'Siège social', desig: 'Négoce, tissage et blanchisserie de toiles de chanvre', qte: '—', montant: '—', corr: '—', tome: 'I', folio: 'Registre', annee: 1680, note: '-' },
-  { id: 'bugnotte', ville: 'Bugnotte', pays: 'Haute-Saône, France', cat: 'envoye', lat: 47.4, lon: 6.3, date: '2 janvier 1772', type: 'Expédition – toiles', desig: 'Toile (n° 804)', qte: '1 pièce, 41 1/2 aunes', montant: '125 #', corr: 'Do M. J. P. Darbin De Bugnotte', tome: '-', folio: 'IMG_0454-2', annee: 1772, note: 'Pièce mesurée 41 1/2 aunes à 60/.' },
-  { id: 'geneve', ville: 'Genève', pays: 'Genève, Suisse', cat: 'envoye', lat: 46.2, lon: 6.14, date: '2 janvier 1772 (jour dit)', type: 'Expédition – toiles', desig: 'Toiles (n° 802, 806)', qte: '2 pièces, 58 aunes ch.', montant: '101 # 10/ ; 118 # 18/', corr: 'Do M. J. C. Broé De Genève', tome: '-', folio: 'IMG_0454-2', annee: 1772, note: 'Expédié chez les frères Lignaud de Grange.' },
-  { id: 'romans', ville: 'Romans', pays: 'Drôme, France', cat: 'envoye', lat: 45.04, lon: 5.05, date: '10 mai 1772', type: 'Expédition – toiles', desig: 'Toile (n° 900)', qte: '1 pièce, 56 1/2 aunes', montant: '115 # 16/ 6', corr: 'Do Laveuve Guy d\'Estvallieu', tome: '-', folio: 'IMG_0455-3', annee: 1772, note: 'Expédiée à Romans ; emballage 2 toiles 1# 15, plomb 1# 3/6.' },
-  { id: 'montpellier', ville: 'Montpellier', pays: 'Hérault, France', cat: 'envoye', lat: 43.61, lon: 3.88, date: '22 mai 1772', type: 'Expédition – toiles', desig: 'Toile (n° 928)', qte: '1 pièce, 57 1/2 aunes', montant: '-', corr: 'Do Mrs Jarel fils Prival & Siala De Montpellier', tome: '-', folio: 'IMG_0455-3', annee: 1772, note: 'Détail montant non précisé.' },
-  { id: 'narbonne', ville: 'Narbonne', pays: 'Aude, France', cat: 'envoye', lat: 43.18, lon: 3.0, date: '22 mai 1772', type: 'Expédition – toiles', desig: 'Toile (n° 941)', qte: '1 pièce, 58 aunes', montant: '162 # 8/', corr: 'Do M. Penaufe Père De Narbonne', tome: '-', folio: 'IMG_0455-3', annee: 1772, note: 'Emballage 4 toiles, plomb papier & corde 15/.' },
-  { id: 'montelimar', ville: 'Montélimar', pays: 'Drôme, France', cat: 'envoye', lat: 44.56, lon: 4.75, date: '1 mai 1772', type: 'Vente – toiles', desig: 'Toile (n° 5)', qte: '1 pièce, ~50 aunes', montant: '44 # 5/', corr: 'Do Mr Autrand père & fils Du Montélimar', tome: '-', folio: 'IMG_0453', annee: 1772, note: 'Vente reportée.' },
-  { id: 'nimes', ville: 'Nîmes', pays: 'Gard, France', cat: 'envoye', lat: 43.84, lon: 4.36, date: '6 juin 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1053, 1045, 999)', qte: '3 pièces, ~57-58 aunes', montant: '118 # ; 119 # ; 112 #', corr: 'Do Ms Lempereur oncle & neveu De Nîmes', tome: '-', folio: 'IMG_0456', annee: 1772, note: 'Via Chabaud ; commission 2 % ; total £ 774 = 6/3.' },
-  { id: 'bourg_saint_andeol', ville: 'Bourg-Saint-Andéol', pays: 'Ardèche, France', cat: 'envoye', lat: 44.37, lon: 4.65, date: '5 juin 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1030, 1037, 1028)', qte: 'Lot de pièces, 55-59 aunes', montant: '118 # ; 112 # ; 122 #', corr: 'Do Mr Simon Lahoudes Des Vans', tome: '-', folio: 'IMG_0457-2', annee: 1772, note: 'Expédié chez M. Fiarrou au Pont-Saint-Esprit via Chabaud ; total £ 1589=6/.' },
-  { id: 'vauvert', ville: 'Vauvert', pays: 'Gard, France', cat: 'envoye', lat: 43.69, lon: 4.27, date: '5 juin 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1035, 1036)', qte: 'Lot de pièces, 57-59 aunes', montant: '103 # ; 108 #', corr: 'Do M. Merle De Vauvert', tome: '-', folio: 'IMG_0457-2', annee: 1772, note: 'Expédié chez M. Brun à Nîmes ; commission 2 % ; total £ 757=17/6.' },
-  { id: 'toulon', ville: 'Toulon', pays: 'Var, France', cat: 'envoye', lat: 43.12, lon: 5.93, date: '5 juin 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 953-985)', qte: 'Lot de pièces, 56-60 aunes', montant: '309 # ; 111 # ; 123 # ; 136 #', corr: 'Do Mr J. A. Simon De Toulon', tome: '-', folio: 'IMG_0458-3', annee: 1772, note: 'Via Girard de Tarascon ; commission 3 % ; total £ 706=4/6.' },
-  { id: 'tournon', ville: 'Tournon', pays: 'Ardèche, France', cat: 'envoye', lat: 45.07, lon: 4.83, date: '5 juin 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 963-965...)', qte: '9 toiles, 58-60 aunes', montant: '206 # ; 104 #', corr: 'Do Mr Besmeo & S. Blachère De Tournon', tome: '-', folio: 'IMG_0458-3', annee: 1772, note: 'Via Girard ; commission 2 % ; total 1250#17/6.' },
-  { id: 'vevey', ville: 'Vevey', pays: 'Vaud, Suisse', cat: 'envoye', lat: 46.46, lon: 6.84, date: '7 juin 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1002, 1050)', qte: 'Lot de pièces, 55-57 aunes', montant: '104 # ; 124 #', corr: 'Do M. Nicolas Chardon De Vevey', tome: '-', folio: 'IMG_0460-2', annee: 1772, note: 'Chez Mr Lanteimo & Morand ; total £ 500=6/6.' },
-  { id: 'marseille', ville: 'Marseille', pays: 'Bouches-du-Rhône, France', cat: 'envoye', lat: 43.3, lon: 5.37, date: '12 juin 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1047, 1010, 1033, 1005)', qte: '13 toiles, ~57 aunes', montant: '143 # ; 133 # ; 1244 #', corr: 'Do Mr J. Didier & fils De Marseille', tome: '-', folio: 'IMG_0460-2', annee: 1772, note: 'À l\'adresse de M. Sauquet de Toulon via Jourdan ; total £ 1675=4/.' },
-  { id: 'beaucaire', ville: 'Beaucaire', pays: 'Gard, France', cat: 'envoye', lat: 43.81, lon: 4.64, date: '20 juin 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1180, 1119-1055)', qte: 'Lot de pièces, 56-61 aunes', montant: '107 # ; 126 # ; 168 #', corr: 'Do Mr Darbes De Cuers (à J. Denantes)', tome: '-', folio: 'IMG_0462', annee: 1772, note: 'Voiture 609 q à 3# ; commission 2 1/2 % ; total 1293#12.' },
-  { id: 'perpignan', ville: 'Perpignan', pays: 'Pyrénées-Orientales, France', cat: 'envoye', lat: 42.7, lon: 2.9, date: '7 juillet 1772', type: 'Expédition – toiles (grosse commande)', desig: 'Toiles (n° 1134-1156)', qte: '18 toiles, 57-61 aunes', montant: '201 # ; 211 # ; 322 # ; 269 # ; 162 #', corr: 'Do Mr J. Mourand & fils De Perpignan', tome: '-', folio: 'IMG_0465-3', annee: 1772, note: 'À Beaucaire ; commission 2 % ; voiture ; total 3113#10.' },
-  { id: 'barcelone', ville: 'Barcelone', pays: 'Catalogne, Espagne', cat: 'envoye', lat: 41.39, lon: 2.17, date: '13 juin 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1097-1100)', qte: 'Lot de pièces, 58-60 aunes', montant: '146 # ; 289 # ; 138 #', corr: 'Do Ms A. Devoise & Cie De Barcelone', tome: '-', folio: 'IMG_0461-3', annee: 1772, note: 'Chez M. Despetis à Sète via Michel ; commission 5 % (6 mois) ; total £ 1342=12/6.' },
-  { id: 'valence', ville: 'Valence', pays: 'Drôme, France', cat: 'envoye', lat: 44.93, lon: 4.89, date: '28 août 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1531, 1533)', qte: '2 pièces, 58 aunes ch.', montant: '127 # ; 147 #', corr: 'Do Mr Bonnet De Valence', tome: '-', folio: 'IMG_0478', annee: 1772, note: 'Via Borry ; commission 2 % ; total 284=15.' },
-  { id: 'draguignan', ville: 'Draguignan', pays: 'Var, France', cat: 'envoye', lat: 43.54, lon: 6.47, date: '28 août 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1508-1510)', qte: '6 pièces, 56-61 aunes', montant: '133 # ; 135 # ; 120 # ; 111 # ; 114 # ; 127 #', corr: 'Do Ms Caillier & Brutinel De Draguignan', tome: '-', folio: 'IMG_0478', annee: 1772, note: 'Commission 5 % ; total £ 787=1/.' },
-  { id: 'bagnols', ville: 'Bagnols', pays: 'Gard, France', cat: 'envoye', lat: 44.16, lon: 4.62, date: '1 juillet 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1288-1406)', qte: '10 pièces, 53-59 aunes', montant: '110 # ; 107 # ; 127 # ; 135 # ; 143 # ; 165 # ; 176 #', corr: 'Do Ms Lagier & Brugière De Bagnols', tome: '-', folio: 'IMG_0467-2', annee: 1772, note: 'Commission 2 % ; total £ 1403#5/6.' },
-  { id: 'brignoles', ville: 'Brignoles', pays: 'Var, France', cat: 'envoye', lat: 43.4, lon: 6.06, date: '7 juillet 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1163-1168)', qte: '6 pièces, 58-61 aunes', montant: '99 # ; 116 # ; 122 # ; 123 # ; 135 # ; 140 #', corr: 'Do M. J. Darbes De Brignoles', tome: '-', folio: 'IMG_0463-2', annee: 1772, note: 'Voiture 300# à 3# ; total £ 766=7.' },
-  { id: 'aix', ville: 'Aix', pays: 'Bouches-du-Rhône, France', cat: 'envoye', lat: 43.53, lon: 5.45, date: '16 juillet 1772', type: 'Vente – toiles', desig: 'Toile (n° 1270)', qte: '1 pièce, 38 aunes', montant: '161 # 2/6', corr: 'Vandus a M. Arnayon D\'Aix', tome: '-', folio: 'IMG_0473-2', annee: 1772, note: 'Reporté sur le carnet.' },
-  { id: 'albi', ville: 'Albi', pays: 'Tarn, France', cat: 'envoye', lat: 43.93, lon: 2.15, date: '20 juillet 1772', type: 'Vente – bas & mallemort', desig: 'Bas, Mallumotte', qte: '3 douz. bas ; 3 p. mallumotte', montant: '63 # ; 108 #', corr: 'Vandus a M. A. Vialla aînée D\'Albi', tome: '-', folio: 'IMG_0475', annee: 1772, note: 'Total £ 171.' },
-  { id: 'castres', ville: 'Castres', pays: 'Tarn, France', cat: 'envoye', lat: 43.6, lon: 2.24, date: '21 juillet 1772', type: 'Vente – toiles', desig: 'Toiles (n° 1422, 1403)', qte: 'Lot de pièces, 57 1/2 aunes', montant: '172 # ; 161 #', corr: 'Vandus a Ms J. Fougasières frères De Castres', tome: '-', folio: 'IMG_0475', annee: 1772, note: 'Commission 5 % ; total £ 974=12/6.' },
-  { id: 'pezenas', ville: 'Pézenas', pays: 'Hérault, France', cat: 'envoye', lat: 43.46, lon: 3.42, date: '21 juillet 1772', type: 'Vente – toiles', desig: 'Toiles (n° 1423-1431)', qte: '6 pièces, 57 aunes (343 aunes)', montant: '994 # 14/', corr: 'Vandus a Ms J. Mathieu Leotard & Viette De Pézenas', tome: '-', folio: 'IMG_0476-2', annee: 1772, note: 'Emballage 3#5/ ; total £ 998=0.' },
-  { id: 'la_bisbal', ville: 'La Bisbal', pays: 'Catalogne, Espagne', cat: 'envoye', lat: 41.96, lon: 3.04, date: '23 juillet 1772', type: 'Vente – bas', desig: 'Bas (Baas)', qte: '60 douzaines', montant: '1230 #', corr: 'Vandus a Ms Jonamia Planas & Cie a La Bisbal', tome: '-', folio: 'IMG_0476-2', annee: 1772, note: 'Payable à 6 mois ; 1 balle de bas chez son frère.' },
-  { id: 'saint_paul_trois_chateaux', ville: 'Saint-Paul-Trois-Châteaux', pays: 'Drôme, France', cat: 'envoye', lat: 44.35, lon: 4.77, date: '2 septembre 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1584-1579)', qte: 'Lot de pièces, 55-61 aunes', montant: '129 # ; 127 # ; 126 # ; 121 #', corr: 'Do Mr Louis La Cour De St Paul Trois Châteaux', tome: '-', folio: 'IMG_0481', annee: 1772, note: 'Chez Jay à Pierrelatte via Jourdan ; commission 2 % ; total £ 638=17/.' },
-  { id: 'seyssel', ville: 'Seyssel', pays: 'Ain/Haute-Savoie, France', cat: 'envoye', lat: 45.96, lon: 5.83, date: '2 septembre 1772', type: 'Expédition – toiles', desig: 'Toiles (n° 1589-1587)', qte: 'Lot de pièces, 58-59 aunes', montant: '234 # ; 127 # ; 128 #', corr: 'Do M. Reboul De Morges', tome: '-', folio: 'IMG_0481', annee: 1772, note: 'Chez Clavière père fils à Seyssel ; commission 2 % ; total £ 505=12/.' },
-];
+function slugify(nom: string): string {
+  return nom
+    .normalize('NFD').replace(/[̀-ͯ]/g, '') // retire les accents
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+interface RawLocalite {
+  nom: string;
+  nom_actuel: string;
+  departement: string;
+  lat: number;
+  lon: number;
+  confreries_estimees: number;
+  remarque?: string;
+}
+
+const { localites } = source as { localites: RawLocalite[] };
+
+export const POINTS: Point[] = localites.map(l => ({
+  id:          slugify(l.nom),
+  ville:       l.nom,
+  departement: l.departement,
+  lat:         l.lat,
+  lon:         l.lon,
+  confreries:  l.confreries_estimees,
+  certaine:    l.nom === 'Strasbourg',
+  remarque: [
+    l.nom_actuel !== l.nom ? `Aujourd'hui : ${l.nom_actuel}.` : null,
+    l.remarque ?? null,
+  ].filter(Boolean).join(' ') || undefined,
+}));
+
+// Centre géographique du corpus (Bas-Rhin / Haut-Rhin) — [lon, lat] MapLibre.
+export const ALSACE_CENTER: [number, number] = [7.387, 48.252];
+
+// Localité la plus attestée, utilisée comme point de départ de l'intro.
+export const FOCUS_POINT = POINTS.reduce((a, b) => (b.confreries > a.confreries ? b : a));

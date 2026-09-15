@@ -1,30 +1,22 @@
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { CONFRERIES_STEPS, radiusForCount, colorForCount } from '@/data/scale';
 import { MarkerShape } from '@/components/MapView/MarkerShape';
-import { CAT } from '@/data/categories';
-import { POINTS } from '@/data/points';
-import type { PointCategory } from '@/types';
 
-const ORDER: PointCategory[] = ['siege', 'bureau', 'envoye', 'client', 'fournisseur'];
+const MAX_R = radiusForCount(CONFRERIES_STEPS[CONFRERIES_STEPS.length - 1]);
+const BOX = MAX_R * 2 + 4;
 
-const COUNTS = POINTS.reduce<Partial<Record<PointCategory, number>>>((acc, p) => {
-  acc[p.cat] = (acc[p.cat] ?? 0) + 1;
-  return acc;
-}, {});
-
-/** Pictogramme d'une catégorie, identique au marqueur de la carte. */
-export function CategoryIcon({ cat, size = 7 }: { cat: PointCategory; size?: number }) {
-  const box = size * 3;
+/** Pictogramme d'un nombre de confréries, identique au marqueur de la carte. */
+export function ConfrerieIcon({ count }: { count: number }) {
+  const r = radiusForCount(count);
   return (
     <svg
-      width={box}
-      height={box}
-      viewBox={`${-box / 2} ${-box / 2} ${box} ${box}`}
+      width={r * 2 + 4}
+      height={r * 2 + 4}
+      viewBox={`${-BOX / 2} ${-BOX / 2} ${BOX} ${BOX}`}
       overflow="visible"
       className="shrink-0"
       aria-hidden="true"
     >
-      <MarkerShape cat={cat} size={size} color={CAT[cat].color} strokeColor="#fff" strokeWidth={1.4} />
+      <MarkerShape radius={r} color={colorForCount(count)} />
     </svg>
   );
 }
@@ -33,22 +25,15 @@ export function CategoryIcon({ cat, size = 7 }: { cat: PointCategory; size?: num
 export function LegendContent() {
   return (
     <div className="flex flex-col gap-3">
-      <ul className="flex flex-col gap-2.5">
-        {ORDER.map(cat => (
-          <li key={cat} className="flex items-center gap-3">
-            <CategoryIcon cat={cat} />
-            <span className="flex-1 text-sm">{CAT[cat].label}</span>
-            <Badge variant="secondary" className="tabular-nums">
-              {COUNTS[cat] ?? 0}
-            </Badge>
+      <p className="text-sm text-muted-foreground">Confréries estimées par localité</p>
+      <ul className="flex flex-wrap items-end gap-x-4 gap-y-2">
+        {CONFRERIES_STEPS.map(n => (
+          <li key={n} className="flex flex-col items-center gap-1.5">
+            <ConfrerieIcon count={n} />
+            <span className="text-xs tabular-nums text-muted-foreground">{n}</span>
           </li>
         ))}
       </ul>
-      <Separator />
-      <div className="flex items-center gap-3 text-sm text-muted-foreground">
-        <span className="h-0.5 w-5 shrink-0 rounded-full bg-brand" />
-        Liaisons commerciales depuis Voiron
-      </div>
     </div>
   );
 }

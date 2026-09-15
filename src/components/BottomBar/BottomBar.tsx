@@ -30,7 +30,7 @@ export function BottomBar() {
           <DrawerHeader>
             <DrawerTitle>Légende</DrawerTitle>
             <DrawerDescription className="sr-only">
-              Catégories de points et liaisons commerciales
+              Nombre de confréries estimé par localité
             </DrawerDescription>
           </DrawerHeader>
           <div className="px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">

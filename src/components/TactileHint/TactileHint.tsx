@@ -18,7 +18,7 @@ export function TactileHint({ leaving }: TactileHintProps) {
         <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand opacity-75" />
         <span className="relative inline-flex size-2 rounded-full bg-brand" />
       </span>
-      Touchez un point pour ouvrir l'entrée du registre
+      Touchez un point pour voir le détail de la localité
     </div>
   );
 }

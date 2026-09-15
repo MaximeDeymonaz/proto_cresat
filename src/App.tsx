@@ -12,11 +12,10 @@ import { ZoomControls } from './components/ZoomControls/ZoomControls';
 import { LoadingScreen } from './components/LoadingScreen/LoadingScreen';
 import { BottomBar } from './components/BottomBar/BottomBar';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { POINTS } from './data/points';
+import { POINTS, ALSACE_CENTER } from './data/points';
 import type { Point } from './types';
 
-const VOIRON: [number, number] = [5.59, 45.36]; // [lng, lat] MapLibre
-const INITIAL_ZOOM = 6.5;
+const INITIAL_ZOOM = 8;
 const TILT_PITCH = 45;
 
 const pitchFor = (v: ViewMode) => (v === 'tilt' ? TILT_PITCH : 0);
@@ -63,7 +62,7 @@ export function App() {
 
   const resetView = useCallback(() => {
     mapRef.current?.flyTo({
-      center:   VOIRON,
+      center:   ALSACE_CENTER,
       zoom:     INITIAL_ZOOM,
       pitch:    pitchFor(viewRef.current),
       bearing:  0,

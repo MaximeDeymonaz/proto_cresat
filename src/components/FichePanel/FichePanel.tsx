@@ -1,12 +1,11 @@
-import { BookOpenIcon, XIcon } from 'lucide-react';
+import { InfoIcon, XIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { CategoryIcon } from '@/components/Legend/LegendContent';
-import { CAT } from '@/data/categories';
+import { ConfrerieIcon } from '@/components/Legend/LegendContent';
 import type { Point } from '@/types';
 
 interface FichePanelProps {
@@ -54,8 +53,8 @@ export function FichePanel({ point, leaving, onClose }: FichePanelProps) {
         >
           <div className="flex items-start justify-between gap-4">
             <Badge variant="outline" className="gap-1.5">
-              <CategoryIcon cat={point.cat} size={4.5} />
-              {CAT[point.cat].label}
+              <ConfrerieIcon count={point.confreries} />
+              {point.confreries} confréries
             </Badge>
             <Button variant="ghost" size="icon-sm" onClick={onClose} aria-label="Fermer">
               <XIcon />
@@ -64,36 +63,34 @@ export function FichePanel({ point, leaving, onClose }: FichePanelProps) {
 
           <div>
             <h2 className="text-4xl font-semibold tracking-tight max-[480px]:text-3xl">{point.ville}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{point.pays}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{point.departement}</p>
           </div>
 
           <Separator />
 
           <dl className="grid grid-cols-2 gap-x-4 gap-y-5">
-            <Field label="Date" value={point.date} />
-            <Field label="Opération" value={point.type} />
-            <Field label="Désignation" value={point.desig} />
-            <Field label="Quantité" value={point.qte} half />
-            <Field label="Montant" value={point.montant} half emphasis />
-            <Field label="Correspondant" value={point.corr} />
+            <Field label="Département" value={point.departement} half />
+            <Field label="Confréries estimées" value={String(point.confreries)} half emphasis />
           </dl>
 
           <Card size="sm" className="bg-muted/40">
             <CardHeader>
-              <CardDescription className="flex items-center gap-2 text-brand">
-                <BookOpenIcon className="size-4" />
-                Consulter dans le registre
+              <CardDescription className="flex items-center gap-2">
+                <InfoIcon className="size-4" />
+                {point.certaine ? 'Valeur attestée' : 'Estimation visuelle'}
               </CardDescription>
-              <CardTitle className="text-xl tabular-nums">
-                Tome {point.tome} · Folio {point.folio}
+              <CardTitle className="text-xl">
+                {point.certaine
+                  ? 'D\'après le registre de Strasbourg'
+                  : 'D\'après la taille du cercle sur la carte originale'}
               </CardTitle>
-              <CardDescription>Année {point.annee}</CardDescription>
+              <CardDescription>Carte 7 · O. Kammerer, 2011 · données L. Schlaefli</CardDescription>
             </CardHeader>
           </Card>
 
-          {point.note && (
+          {point.remarque && (
             <blockquote className="border-l-2 pl-4 text-sm text-pretty text-muted-foreground italic">
-              {point.note}
+              {point.remarque}
             </blockquote>
           )}
         </div>
