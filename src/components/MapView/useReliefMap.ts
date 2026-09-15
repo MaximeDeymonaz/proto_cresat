@@ -6,6 +6,7 @@ import { POINTS, ALSACE_CENTER, FOCUS_POINT } from '../../data/points';
 import { buildMarkerElement, updateMarkerSelection } from './markerIcon';
 import { STYLES, TERRAIN_EXAGGERATION, filterStyleLayers } from './reliefStyle';
 import type { Basemap } from './reliefStyle';
+import { addDepartementsLayers } from './departementsLayer';
 
 const FINAL_ZOOM      = 8;
 const INTRO_ZOOM      = 11;   // Démarre zoomé sur la localité la plus attestée
@@ -76,6 +77,7 @@ export function useReliefMap({
         if (map.getTerrain()) map.setTerrain(null);
         filterStyleLayers(map);
       }
+      addDepartementsLayers(map);
     });
 
     // L'intro (dezoom) démarre quand les tuiles initiales sont chargées.
