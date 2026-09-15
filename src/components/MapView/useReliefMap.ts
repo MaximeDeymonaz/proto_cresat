@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import type { RefObject } from 'react';
-import maplibregl from 'maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import { POINTS } from '../../data/points';
 import { buildMarkerElement, updateMarkerSelection } from './markerIcon';
 import { STYLES, TERRAIN_EXAGGERATION, filterStyleLayers } from './reliefStyle';
@@ -14,6 +15,10 @@ const FINAL_ZOOM      = 5;
 const INTRO_ZOOM      = 10;   // Démarre zoomé sur Voiron
 const DEZOOM_DURATION = 2100; // ms
 const INTRO_FALLBACK  = 12000; // garde-fou si les tuiles ne répondent pas
+
+// MapLibre v6 cherche son worker à côté de son propre fichier, ce qui casse
+// avec le pré-bundling Vite : on lui fournit l'URL du worker bundlé par Vite.
+maplibregl.setWorkerUrl(maplibreWorkerUrl);
 
 type AnimPhase = 'dezoom' | 'arcs' | 'done';
 
@@ -41,10 +46,13 @@ export function useReliefMap({
   const selectedIdRef  = useRef(selectedId);
   const animPhaseRef   = useRef<AnimPhase>('dezoom');
 
-  onSelectRef.current    = onSelect;
-  onFirstIdleRef.current = onFirstIdle;
-  basemapRef.current     = basemap;
-  selectedIdRef.current  = selectedId;
+  // Synchronise les refs avec les dernières props (hors rendu).
+  useLayoutEffect(() => {
+    onSelectRef.current    = onSelect;
+    onFirstIdleRef.current = onFirstIdle;
+    basemapRef.current     = basemap;
+    selectedIdRef.current  = selectedId;
+  });
 
   function ensureCustomLayers(map: maplibregl.Map) {
     upsertConnections(map, animPhaseRef.current === 'done'
@@ -55,6 +63,7 @@ export function useReliefMap({
   // ── Création de la carte (une seule fois) ──
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
+    const markerElems = markerElemsRef.current;
 
     const map = new maplibregl.Map({
       container:          containerRef.current,
@@ -153,7 +162,7 @@ export function useReliefMap({
       cancelArcsRef.current?.();
       map.remove();
       mapRef.current = null;
-      markerElemsRef.current.clear();
+      markerElems.clear();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

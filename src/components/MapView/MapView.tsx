@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import type maplibregl from 'maplibre-gl';
+import type * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useReliefMap } from './useReliefMap';
 import { Atmosphere } from './Atmosphere';

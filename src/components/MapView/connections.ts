@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import type * as maplibregl from 'maplibre-gl';
 import { POINTS } from '../../data/points';
 
 export const VOIRON: [number, number] = [5.59, 45.36];

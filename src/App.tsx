@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import type { Map as MaplibreMap } from 'maplibre-gl';
 import { MapView } from './components/MapView/MapView';
 import type { Basemap } from './components/MapView/MapView';
@@ -32,7 +32,9 @@ export function App() {
   const mapRef = useRef<MaplibreMap | null>(null);
   const panelLeaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const viewRef = useRef(view);
-  viewRef.current = view;
+  useLayoutEffect(() => {
+    viewRef.current = view;
+  }, [view]);
 
   const selectedPoint: Point | null =
     selectedId ? POINTS.find(p => p.id === selectedId) ?? null : null;
