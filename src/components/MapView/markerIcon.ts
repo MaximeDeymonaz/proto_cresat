@@ -1,9 +1,13 @@
 import type { Point } from '../../types';
-import { radiusForCount, colorForCount, MAX_RADIUS } from '../../data/scale';
+import { radiusForCount, colorForCount } from '../../data/scale';
 import type { LabelAnchor } from './labelPlacement';
 
-// BOX est le demi-côté du SVG en px : doit couvrir le plus grand cercle possible.
-const BOX = MAX_RADIUS + 2;
+// Demi-côté du SVG : le rayon plus la place du liseré. Il doit rester inférieur
+// à la zone de clic (--mk-hit, au moins 2r + 6px) : un SVG plus grand que le
+// bouton déborde de la grille, qui le recale alors dans le coin, et le cercle
+// se retrouve décalé de son propre halo. L'ombre portée, elle, déborde
+// librement (overflow: visible).
+const box = (r: number) => r + 2;
 
 /** Éléments DOM d'une localité, chacun porté par un MapLibre Marker. */
 export interface LocaliteMarker {
@@ -38,9 +42,10 @@ export function buildMarker(p: Point, rank: number): LocaliteMarker {
     `--mk-fill-dark:${colorForCount(p.confreries, 'dark')};` +
     `--mk-fill-light:${colorForCount(p.confreries, 'light')};` +
     `z-index:${10 + rank};`;
+  const b = box(r);
   button.innerHTML = `
-    <svg class="mk-svg" viewBox="${-BOX} ${-BOX} ${BOX * 2} ${BOX * 2}"
-         width="${BOX * 2}" height="${BOX * 2}" aria-hidden="true">
+    <svg class="mk-svg" viewBox="${-b} ${-b} ${b * 2} ${b * 2}"
+         width="${b * 2}" height="${b * 2}" aria-hidden="true">
       <circle r="${r}" />
     </svg>
   `;
