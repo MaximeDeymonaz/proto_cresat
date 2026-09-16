@@ -2,6 +2,7 @@ import { Rotate3dIcon, Settings2Icon, SquareIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
@@ -9,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import type { Basemap } from '../MapView/MapView';
 
 export type ViewMode = 'top' | 'tilt';
@@ -18,6 +20,10 @@ interface BasemapToggleProps {
   onChange: (b: Basemap) => void;
   view: ViewMode;
   onViewChange: (v: ViewMode) => void;
+  showDepartements: boolean;
+  onShowDepartementsChange: (show: boolean) => void;
+  /** La fiche ouverte pousse le bouton plutôt que de le recouvrir. */
+  panelOpen: boolean;
 }
 
 const BASEMAPS: { value: Basemap; label: string; swatch: string }[] = [
@@ -26,13 +32,19 @@ const BASEMAPS: { value: Basemap; label: string; swatch: string }[] = [
   { value: 'dark',     label: 'Sombre',    swatch: 'bg-[#26282c]' },
 ];
 
-export function BasemapToggle({ value, onChange, view, onViewChange }: BasemapToggleProps) {
+export function BasemapToggle({
+  value, onChange, view, onViewChange, showDepartements, onShowDepartementsChange, panelOpen,
+}: BasemapToggleProps) {
   return (
     <div
-      className={
-        'absolute top-6 right-6 z-20 max-md:top-4 max-md:right-4 ' +
-        'max-[480px]:top-auto max-[480px]:right-3 max-[480px]:bottom-[calc(4.25rem+env(safe-area-inset-bottom))]'
-      }
+      data-map-inset
+      className={cn(
+        'absolute top-6 right-6 z-20 transition-transform max-md:top-4 max-md:right-4',
+        'max-xs:top-auto max-xs:right-3 max-xs:bottom-[calc(5rem+env(safe-area-inset-bottom))]',
+        panelOpen
+          ? 'duration-300 ease-enter xs:translate-x-[calc(var(--fiche-w)*-1)]'
+          : 'duration-200 ease-exit',
+      )}
     >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -69,6 +81,17 @@ export function BasemapToggle({ value, onChange, view, onViewChange }: BasemapTo
               Vue inclinée 45°
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuLabel>Affichage</DropdownMenuLabel>
+          <DropdownMenuCheckboxItem
+            checked={showDepartements}
+            onCheckedChange={checked => onShowDepartementsChange(checked === true)}
+            onSelect={e => e.preventDefault()}
+          >
+            Limites des départements
+          </DropdownMenuCheckboxItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

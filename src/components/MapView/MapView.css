@@ -1,19 +1,43 @@
+/* Contexte d'empilement propre à la carte : canvas, voile, atmosphère puis
+   marqueurs s'ordonnent entre eux, toujours sous l'interface. */
 .map-wrap {
   position: relative;
   width: 100%;
   height: 100%;
+  isolation: isolate;
+
+  /* Étiquettes : texte clair et halo sombre sur les fonds sombres… */
+  --mk-text: #ededed;
+  --mk-halo: rgb(18 18 18 / 0.9);
+}
+
+/* … et l'inverse sur le fond clair. */
+.map-wrap[data-map-theme="light"] {
+  --mk-text: #262626;
+  --mk-halo: rgb(248 248 246 / 0.95);
 }
 
 .map-maplibre {
   width: 100%;
   height: 100%;
   background: var(--background);
-  animation: map-fade-in 0.9s ease both;
 }
 
-@keyframes map-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+/* ── Voile de changement de fond ──
+   Masque la reconstruction du style. Sous les marqueurs, qui restent visibles :
+   seul le fond change. */
+.map-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 250ms var(--ease-enter);
+}
+
+.map-veil[data-active] {
+  opacity: 1;
+  transition: opacity 150ms var(--ease-exit);
 }
 
 /* ── Atmosphère (fond relief) : voile uniforme, vignettage ── */
@@ -45,62 +69,164 @@
   display: none;
 }
 
-.map-maplibre.theme-dark {
-  background: #14181c;
+/* ── Marqueurs ──
+   Bouton focusable dont la zone de clic dépasse le cercle : 32 px à la souris
+   (WCAG 2.5.8 : 24 px mini), 44 px au doigt. Les gros cercles sont dessous
+   (z-index posé dans markerIcon.ts), au-dessus de l'atmosphère. */
+.mk-icon {
+  --mk-hit: max(32px, calc(var(--mk-r) * 2 + 6px));
+  display: grid;
+  place-items: center;
+  width: var(--mk-hit);
+  height: var(--mk-hit);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  outline: none;
+  cursor: pointer;
 }
 
-/* ── Marqueurs ── */
-.mk-icon {
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  overflow: visible;
-  transition: opacity 0.25s ease;
+@media (pointer: coarse) {
+  .mk-icon {
+    --mk-hit: max(44px, calc(var(--mk-r) * 2 + 6px));
+  }
 }
 
 .mk-svg {
   overflow: visible;
-  transition: transform 0.18s ease;
-  filter: drop-shadow(0 2px 3px rgba(15, 35, 55, 0.28));
+  pointer-events: none;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.35));
+  transition: transform 180ms var(--ease-enter);
 }
 
-.mk-icon:hover .mk-svg {
-  transform: scale(1.18);
+.mk-svg circle {
+  fill: var(--mk-fill-dark);
+  stroke: #fff;
+  stroke-width: 1.6;
+  transition: fill 300ms ease;
 }
 
-/* Halo de sélection */
-.mk-icon.is-selected::before {
+[data-map-theme="light"] .mk-svg circle {
+  fill: var(--mk-fill-light);
+}
+
+@media (hover: hover) {
+  .mk-icon:hover .mk-svg,
+  .mk-icon.is-hover .mk-svg {
+    transform: scale(1.18);
+  }
+}
+
+.mk-icon::before,
+.mk-icon::after {
   content: '';
   position: absolute;
-  top: 50%; left: 50%;
-  width: 42px; height: 42px;
-  transform: translate(-50%, -50%);
-  border: 1.5px solid var(--foreground);
+  top: 50%;
+  left: 50%;
   border-radius: 50%;
-  opacity: 0.70;
   pointer-events: none;
 }
 
-/* Étiquette */
+/* Halo de sélection : entre en s'agrandissant (180 ms), sort plus vite (120 ms). */
+.mk-icon::before {
+  width: calc(var(--mk-r) * 2 + 10px);
+  height: calc(var(--mk-r) * 2 + 10px);
+  border: 1.5px solid var(--mk-text);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+  transition: opacity 120ms var(--ease-exit), transform 120ms var(--ease-exit);
+}
+
+.mk-icon.is-selected::before {
+  opacity: 0.8;
+  transform: translate(-50%, -50%) scale(1);
+  transition-duration: 180ms;
+  transition-timing-function: var(--ease-enter);
+}
+
+/* Anneau de focus clavier, distinct du halo de sélection. */
+.mk-icon:focus-visible::after {
+  width: calc(var(--mk-r) * 2 + 18px);
+  height: calc(var(--mk-r) * 2 + 18px);
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--mk-text);
+  box-shadow: 0 0 0 2px var(--mk-halo);
+}
+
+/* ── Étiquettes ──
+   Marker distinct, au-dessus de tous les cercles. Le côté (data-anchor) est
+   choisi par labelPlacement.ts pour éviter les chevauchements. */
+.mk-label-anchor {
+  z-index: 100;
+}
+
 .mk-label {
+  --mk-d: calc(var(--mk-r) + 5px); /* LABEL_GAP */
   position: absolute;
-  left: calc(50% + 13px);
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  left: 0;
   white-space: nowrap;
   font-family: var(--font-sans);
   font-size: 10.5px;
   font-weight: 500;
+  line-height: 1.2;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #262626;
-  -webkit-text-stroke: 3px rgba(240, 240, 240, 0.95);
-  paint-order: stroke;
+  color: var(--mk-text);
+  /* Halo en ombres superposées : contrairement à -webkit-text-stroke, il ne
+     mord pas dans les lettres et ne fait pas de pointes aux angles. */
+  text-shadow:
+    0 0 2px var(--mk-halo),
+    1px 1px 0 var(--mk-halo),
+    -1px 1px 0 var(--mk-halo),
+    1px -1px 0 var(--mk-halo),
+    -1px -1px 0 var(--mk-halo),
+    0 0 4px var(--mk-halo);
+  cursor: pointer;
+  transition: opacity 150ms ease, color 300ms ease;
+}
+
+/* Décalages jumeaux de labelPlacement.ts (--mk-q ≈ √2/2 pour les diagonales). */
+.mk-label {
+  --mk-q: calc(var(--mk-d) * 0.7);
+}
+
+.mk-label[data-anchor="right"]        { transform: translate(var(--mk-d), -50%); }
+.mk-label[data-anchor="left"]         { transform: translate(calc(-100% - var(--mk-d)), -50%); }
+.mk-label[data-anchor="top"]          { transform: translate(-50%, calc(-100% - var(--mk-d))); }
+.mk-label[data-anchor="bottom"]       { transform: translate(-50%, var(--mk-d)); }
+.mk-label[data-anchor="top-right"]    { transform: translate(var(--mk-q), calc(-100% - var(--mk-q))); }
+.mk-label[data-anchor="bottom-right"] { transform: translate(var(--mk-q), var(--mk-q)); }
+.mk-label[data-anchor="top-left"]     { transform: translate(calc(-100% - var(--mk-q)), calc(-100% - var(--mk-q))); }
+.mk-label[data-anchor="bottom-left"]  { transform: translate(calc(-100% - var(--mk-q)), var(--mk-q)); }
+
+.mk-label:not([data-anchor]),
+.mk-label[data-hidden] {
+  opacity: 0;
   pointer-events: none;
 }
 
-/* Fond sombre */
-.theme-dark .mk-label {
-  color: #D4D4D4;
-  -webkit-text-stroke: 3px rgba(20, 20, 20, 0.92);
+/* ── Apparition, une fois la caméra arrivée ──
+   Cascade du plus grand au plus petit, puis les étiquettes. `backwards` : chaque
+   élément reste invisible pendant son délai, puis retrouve ses styles normaux
+   (survol, opacité de placement). */
+.map-maplibre:not([data-revealed]) :is(.mk-icon, .mk-label) {
+  visibility: hidden;
+}
+
+.map-maplibre[data-revealed] .mk-svg {
+  animation: mk-pop 320ms var(--ease-enter) calc(var(--mk-rank) * 35ms) backwards;
+}
+
+.map-maplibre[data-revealed] .mk-label {
+  animation: mk-fade 300ms var(--ease-enter) calc(var(--mk-rank) * 35ms + 200ms) backwards;
+}
+
+@keyframes mk-pop {
+  from { opacity: 0; transform: scale(0.4); }
+}
+
+@keyframes mk-fade {
+  from { opacity: 0; }
 }
