@@ -1,7 +1,22 @@
 import type * as maplibregl from 'maplibre-gl';
 import type { StyleSpecification } from 'maplibre-gl';
+import type { MapTheme } from '../../data/scale';
 
 export type Basemap = 'relief' | 'positron' | 'dark';
+
+/** Luminosité de chaque fond : pilote la rampe des cercles et le style des étiquettes. */
+export const MAP_THEME: Record<Basemap, MapTheme> = {
+  relief:   'dark',
+  positron: 'light',
+  dark:     'dark',
+};
+
+/** Teinte dominante de chaque fond, pour le voile du changement de fond. */
+export const BASEMAP_BACKGROUND: Record<Basemap, string> = {
+  relief:   '#2e2e2e',
+  positron: '#f2f3f0',
+  dark:     '#0e0e0e',
+};
 
 // ── Fond « Relief 3D » : paysage naturel sans construction humaine ──
 // Altimétrie Terrarium (Mapzen/AWS, libre), teinte hypsométrique + ombrage,

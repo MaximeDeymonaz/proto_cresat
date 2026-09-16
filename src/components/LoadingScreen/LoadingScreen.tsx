@@ -3,6 +3,9 @@ import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
+/** Durée du fondu de sortie (ms) : la caméra attend sa fin pour démarrer l'intro. */
+export const LOADER_FADE_MS = 400;
+
 const TIPS = [
   'Inclinez la carte à 45° pour révéler le relief des Vosges.',
   'La vue de haut offre une lecture claire des distances.',
@@ -10,22 +13,42 @@ const TIPS = [
   'La taille des cercles est proportionnelle au nombre de confréries.',
 ];
 
+const TIP_INTERVAL = 3400; // ms
+const TIP_FADE_OUT = 200;  // ms, doit suivre la classe duration-200 ci-dessous
+
 interface LoadingScreenProps {
   leaving: boolean;
+  onExited: () => void;
 }
 
-export function LoadingScreen({ leaving }: LoadingScreenProps) {
+export function LoadingScreen({ leaving, onExited }: LoadingScreenProps) {
   const [tip, setTip] = useState(0);
+  const [tipVisible, setTipVisible] = useState(true);
 
+  // Enchaînement des astuces : fondu sortant, changement de texte, fondu entrant.
   useEffect(() => {
-    const id = setInterval(() => setTip(t => (t + 1) % TIPS.length), 3400);
-    return () => clearInterval(id);
+    let swap: ReturnType<typeof setTimeout>;
+    const cycle = setInterval(() => {
+      setTipVisible(false);
+      swap = setTimeout(() => {
+        setTip(t => (t + 1) % TIPS.length);
+        setTipVisible(true);
+      }, TIP_FADE_OUT);
+    }, TIP_INTERVAL);
+    return () => {
+      clearInterval(cycle);
+      clearTimeout(swap);
+    };
   }, []);
 
   return (
     <div
+      onTransitionEnd={e => {
+        if (leaving && e.target === e.currentTarget) onExited();
+      }}
       className={cn(
-        'fixed inset-0 z-100 flex flex-col items-center justify-center overflow-hidden bg-background transition-opacity duration-900',
+        'fixed inset-0 z-100 flex flex-col items-center justify-center overflow-hidden bg-background',
+        'transition-opacity duration-400 ease-exit',
         leaving && 'pointer-events-none opacity-0',
       )}
     >
@@ -48,7 +71,12 @@ export function LoadingScreen({ leaving }: LoadingScreenProps) {
           <Spinner aria-label="Chargement" />
           Chargement…
         </div>
-        <p key={tip} className="max-w-md text-center text-sm text-muted-foreground/70 duration-500 animate-in fade-in">
+        <p
+          className={cn(
+            'max-w-md text-center text-sm text-muted-foreground/85 transition-opacity',
+            tipVisible ? 'duration-300 ease-enter' : 'opacity-0 duration-200 ease-exit',
+          )}
+        >
           {TIPS[tip]}
         </p>
       </div>

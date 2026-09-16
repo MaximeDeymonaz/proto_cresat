@@ -2,6 +2,8 @@ import { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react
 import type { Map as MaplibreMap } from 'maplibre-gl';
 import { MapView } from './components/MapView/MapView';
 import type { Basemap } from './components/MapView/MapView';
+import { MAP_THEME } from './components/MapView/reliefStyle';
+import { alsaceCamera, revealPoint } from './components/MapView/camera';
 import { BasemapToggle } from './components/BasemapToggle/BasemapToggle';
 import type { ViewMode } from './components/BasemapToggle/BasemapToggle';
 import { TitleCard } from './components/TitleCard/TitleCard';
@@ -9,27 +11,29 @@ import { Legend } from './components/Legend/Legend';
 import { TactileHint } from './components/TactileHint/TactileHint';
 import { FichePanel } from './components/FichePanel/FichePanel';
 import { ZoomControls } from './components/ZoomControls/ZoomControls';
-import { LoadingScreen } from './components/LoadingScreen/LoadingScreen';
+import { LoadingScreen, LOADER_FADE_MS } from './components/LoadingScreen/LoadingScreen';
 import { BottomBar } from './components/BottomBar/BottomBar';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { POINTS, ALSACE_CENTER } from './data/points';
+import { POINTS } from './data/points';
 import type { Point } from './types';
 
-const INITIAL_ZOOM = 8;
-const TILT_PITCH = 45;
+const TILT_PITCH    = 45;
+const HINT_DURATION = 6000; // ms, sauf première sélection plus tôt
 
 const pitchFor = (v: ViewMode) => (v === 'tilt' ? TILT_PITCH : 0);
+
+type HintPhase = 'hidden' | 'visible' | 'leaving' | 'gone';
 
 export function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [panelLeaving, setPanelLeaving] = useState(false);
-  const [hintLeaving, setHintLeaving] = useState(false);
-  const [hintVisible, setHintVisible] = useState(true);
+  const [focusPanel, setFocusPanel] = useState(false);
+  const [hint, setHint] = useState<HintPhase>('hidden');
   const [basemap, setBasemap] = useState<Basemap>('relief');
   const [view, setView] = useState<ViewMode>('tilt');
+  const [showDepartements, setShowDepartements] = useState(true);
   const [loadPhase, setLoadPhase] = useState<'loading' | 'leaving' | 'done'>('loading');
   const mapRef = useRef<MaplibreMap | null>(null);
-  const panelLeaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const viewRef = useRef(view);
   useLayoutEffect(() => {
     viewRef.current = view;
@@ -37,53 +41,54 @@ export function App() {
 
   const selectedPoint: Point | null =
     selectedId ? POINTS.find(p => p.id === selectedId) ?? null : null;
+  const panelOpen = selectedPoint !== null && !panelLeaving;
+  const theme = MAP_THEME[basemap];
 
-  const handleSelect = useCallback((id: string | null) => {
+  const handleSelect = useCallback((id: string | null, viaKeyboard = false) => {
     if (id) {
-      if (panelLeaveTimer.current) {
-        clearTimeout(panelLeaveTimer.current);
-        panelLeaveTimer.current = null;
-      }
       setPanelLeaving(false);
       setSelectedId(id);
+      setFocusPanel(viaKeyboard);
+      setHint(h => (h === 'visible' ? 'leaving' : h));
     } else {
+      // Démontage à la fin de l'animation de sortie (handlePanelExited).
       setPanelLeaving(true);
-      panelLeaveTimer.current = setTimeout(() => {
-        setSelectedId(null);
-        setPanelLeaving(false);
-        panelLeaveTimer.current = null;
-      }, 320);
     }
   }, []);
+
+  const closePanel = useCallback(() => handleSelect(null), [handleSelect]);
+
+  const handlePanelExited = useCallback(() => {
+    setSelectedId(null);
+    setPanelLeaving(false);
+  }, []);
+
+  // La carte se décale juste assez pour que la localité choisie ne reste pas
+  // sous la fiche (constance de l'objet sélectionné).
+  useEffect(() => {
+    if (selectedPoint && mapRef.current) {
+      revealPoint(mapRef.current, [selectedPoint.lon, selectedPoint.lat]);
+    }
+  }, [selectedPoint]);
+
+  // L'invite disparaît d'elle-même si personne ne touche la carte.
+  useEffect(() => {
+    if (hint !== 'visible') return;
+    const timer = setTimeout(() => setHint('leaving'), HINT_DURATION);
+    return () => clearTimeout(timer);
+  }, [hint]);
 
   const handleMapReady = useCallback((map: MaplibreMap) => {
     mapRef.current = map;
   }, []);
 
   const resetView = useCallback(() => {
-    mapRef.current?.flyTo({
-      center:   ALSACE_CENTER,
-      zoom:     INITIAL_ZOOM,
-      pitch:    pitchFor(viewRef.current),
-      bearing:  0,
-      duration: 800,
-    });
+    const map = mapRef.current;
+    if (map) map.flyTo({ ...alsaceCamera(map, pitchFor(viewRef.current)), duration: 800 });
   }, []);
 
-  const handleFirstIdle = useCallback(() => {
-    setLoadPhase('leaving');
-    setTimeout(() => setLoadPhase('done'), 950);
-  }, []);
-
-  useEffect(() => {
-    if (loadPhase !== 'done') return;
-    const leaveTimer = setTimeout(() => setHintLeaving(true), 1500);
-    const hideTimer = setTimeout(() => setHintVisible(false), 4500);
-    return () => {
-      clearTimeout(leaveTimer);
-      clearTimeout(hideTimer);
-    };
-  }, [loadPhase]);
+  const handleFirstIdle = useCallback(() => setLoadPhase('leaving'), []);
+  const handleRevealed  = useCallback(() => setHint('visible'), []);
 
   return (
     <TooltipProvider>
@@ -93,27 +98,49 @@ export function App() {
             selectedId={selectedId}
             basemap={basemap}
             pitch={pitchFor(view)}
+            showDepartements={showDepartements}
+            introDelay={LOADER_FADE_MS}
             onSelect={handleSelect}
             onMapReady={handleMapReady}
             onFirstIdle={handleFirstIdle}
+            onRevealed={handleRevealed}
           />
         </div>
 
         <TitleCard />
-        <Legend />
-        <BasemapToggle value={basemap} onChange={setBasemap} view={view} onViewChange={setView} />
+        <Legend theme={theme} showDepartements={showDepartements} />
+        <BasemapToggle
+          value={basemap}
+          onChange={setBasemap}
+          view={view}
+          onViewChange={setView}
+          showDepartements={showDepartements}
+          onShowDepartementsChange={setShowDepartements}
+          panelOpen={panelOpen}
+        />
 
-        <ZoomControls onReset={resetView} />
+        <ZoomControls onReset={resetView} panelOpen={panelOpen} />
 
-        {hintVisible && <TactileHint leaving={hintLeaving} />}
-
-        {selectedPoint && (
-          <FichePanel point={selectedPoint} leaving={panelLeaving} onClose={() => handleSelect(null)} />
+        {(hint === 'visible' || hint === 'leaving') && (
+          <TactileHint leaving={hint === 'leaving'} onExited={() => setHint('gone')} />
         )}
 
-        <BottomBar />
+        {selectedPoint && (
+          <FichePanel
+            point={selectedPoint}
+            theme={theme}
+            leaving={panelLeaving}
+            autoFocus={focusPanel}
+            onClose={closePanel}
+            onExited={handlePanelExited}
+          />
+        )}
 
-        {loadPhase !== 'done' && <LoadingScreen leaving={loadPhase === 'leaving'} />}
+        <BottomBar theme={theme} />
+
+        {loadPhase !== 'done' && (
+          <LoadingScreen leaving={loadPhase === 'leaving'} onExited={() => setLoadPhase('done')} />
+        )}
       </div>
     </TooltipProvider>
   );

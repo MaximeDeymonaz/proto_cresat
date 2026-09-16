@@ -80,6 +80,17 @@
   --brand: oklch(0.746 0 0);
 }
 
+/* Largeur de la fiche latérale : partagée avec les contrôles qu'elle décale. */
+:root {
+  --fiche-w: min(398px, 46vw);
+}
+
+@media (width < 48rem) {
+  :root {
+    --fiche-w: min(20rem, 52vw);
+  }
+}
+
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: 'Geist Variable', sans-serif;
@@ -124,6 +135,17 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+@theme {
+  /* Téléphone. En rem, comme les breakpoints natifs : Tailwind ne sait pas
+     ordonner un `max-[480px]` face à un `max-md` (48rem), qui l'écrasait. */
+  --breakpoint-xs: 30rem;
+
+  /* Courbes de mouvement (Material 3, « emphasized ») : décélération pour ce
+     qui entre, accélération pour ce qui sort. */
+  --ease-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -150,7 +172,9 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
   }
 }
